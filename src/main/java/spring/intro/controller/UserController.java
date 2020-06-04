@@ -1,13 +1,13 @@
-package spring.intro.controllers;
+package spring.intro.controller;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import spring.intro.UserResponseDto;
+import spring.intro.dto.UserResponseDto;
 import spring.intro.model.User;
 import spring.intro.service.UserService;
 
@@ -34,12 +34,9 @@ public class UserController {
 
     @GetMapping
     public List<UserResponseDto> getAll() {
-        List<UserResponseDto> list = new ArrayList<>();
-        List<User> userList = userService.listUsers();
-        for (User user : userList) {
-            list.add(getUserDto(user));
-        }
-        return list;
+        return userService.listUsers().stream()
+                .map(this::getUserDto)
+                .collect(Collectors.toList());
     }
 
     private UserResponseDto getUserDto(User user) {
